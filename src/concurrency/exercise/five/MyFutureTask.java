@@ -1,16 +1,14 @@
-package concurrency.exercise.problemOne;
+package concurrency.exercise.five;
 
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 
-public class TestQueueingFuture<T> implements IMyFuture{
+public class MyFutureTask<T> implements Runnable, IMyFuture{
     private Callable<T> callable;
     private T result;
     private boolean finish;
-    private final BlockingQueue<IMyFuture<T>> myCompletionQueue;
-    public TestQueueingFuture(Callable callable, BlockingQueue<IMyFuture<T>> myCompletionQueue) {
+    //public MyFutureTask(){}
+    public MyFutureTask(Callable callable) {
         this.callable = callable;
-        this.myCompletionQueue=myCompletionQueue;
     }
 
     @Override
@@ -20,22 +18,29 @@ public class TestQueueingFuture<T> implements IMyFuture{
 
     @Override
     public T get() {
+        while (!finish) {
+            try {
+                synchronized (this) {
+                    wait();
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         return result;
-    }
-
-    public void done() {
-        myCompletionQueue.add(this);
     }
 
     @Override
     public void run() {
-        System.out.println("and in here?");
         try {
             result = callable.call();
         } catch (Exception e) {
             e.printStackTrace();
         }
         finish = true;
-        done();
+
+        synchronized (this) {
+            notifyAll();
+        }
     }
 }

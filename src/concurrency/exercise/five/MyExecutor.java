@@ -1,7 +1,4 @@
-package concurrency.exercise.problemOne;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+package concurrency.exercise.five;
 
 class MyExecutor {
     public static IMyExecutorService newMyThreadPoll(final int capacity) {

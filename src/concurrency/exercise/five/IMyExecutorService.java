@@ -1,7 +1,6 @@
-package concurrency.exercise.problemOne;
+package concurrency.exercise.five;
 
 import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
 
 public interface IMyExecutorService {
     void execute(Runnable r);
